@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace School_Device_Calculator
@@ -47,7 +48,7 @@ namespace School_Device_Calculator
             Console.WriteLine("\n\nWelcome to the School Device Calculator.\n\rThis program helps schools calculate the insurance value of their smart devices.\n\rYou will be asked to enter the device name, number of devices, cost per device, and the device category.\n\rThe program will apply the insurance discount rules, calculate the total insured value, and show how the\n\rdevice value decreases by 5% each month over six months. \n\r Press [Enter] to coninue");
             Console.ReadLine();
             Console.Clear();
-            
+
 
             //if the user wants to continuse they press y
             char continueInput = 'y';
@@ -87,15 +88,15 @@ namespace School_Device_Calculator
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("\n============================================");
             Console.ResetColor();
-            
 
 
-            
-             
-             
 
-            
-            
+
+
+
+
+
+
 
         }
 
@@ -105,30 +106,30 @@ namespace School_Device_Calculator
         public static string OneDevice()
         {
 
-          
+
             // Beginse the OneDevice buy asking for the name / cost / and the category it belongs to
 
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("--------Device Input--------");
             Console.ResetColor();
 
-            List<string> QUESTIONS = new List<string> { "\nPlease Enter The Device Name:", "\nPlease Enter The Device Category:", "\nPlease Enter The Device Cost:", "\nPlease Enter The Device Amount:"} ;
+            List<string> QUESTIONS = new List<string> { "\nPlease Enter The Device Name:", "\nPlease Enter The Device Category:", "\nPlease Enter The Device Cost:", "\nPlease Enter The Device Amount:" };
 
 
 
             string name = CheckName(QUESTIONS[0]);
 
 
-            
-            double cost = Checkdouble(MAXMINCOST[0], MAXMINCOST[1], QUESTIONS[2]);
-            
 
-            
+            double cost = Checkdouble(MAXMINCOST[0], MAXMINCOST[1], QUESTIONS[2]);
+
+
+
             int amount = CheckInt(MAXMINAMOUNT[0], MAXMINAMOUNT[1], QUESTIONS[3]);
 
-           
 
-            Console.WriteLine("\nPlease choose the category:\n\r1) Laptop\n\r2) Desktop\n\r3) Other");
+
+            
             string category = CheckCategory(QUESTIONS[1]);
 
 
@@ -167,7 +168,7 @@ namespace School_Device_Calculator
             string deviceslip = "";
 
             deviceslip += "\n>>>>>>>>>>>>>>>>>>Device<<<<<<<<<<<<<<<<<<";
-            
+
             //stors the (display the name of the device)
             deviceslip += $"\n{name}";
             //stores the (display the amount of this device)
@@ -181,16 +182,16 @@ namespace School_Device_Calculator
                 // and the monthlyvalue i print the value for that month
                 //stores the (display the 5 month and the discount
 
-                
+
                 deviceslip += $"\n{i + 1}           {monthlyValues[i]:C}";
             }
 
 
             deviceslip += $"\nCATEGORY: {category}";
 
-            
+
             deviceslip += "\n.........................................";
-            
+
 
 
             return deviceslip;
@@ -209,7 +210,7 @@ namespace School_Device_Calculator
             int fullPrice = Math.Min(amount, 6);
 
             //this variable -6 in the device amount if there is more than 6 than it will take 6 away and discount only the ones that are left
-            int discountPrice = Math.Max(0, amount -6);
+            int discountPrice = Math.Max(0, amount - 6);
 
             //the vode takes the full price and cost and times it togather
             double fullPriceTotel = fullPrice * cost;
@@ -240,7 +241,7 @@ namespace School_Device_Calculator
             double currentCost = totelCost;
 
             // the for is for each month which is 6 month
-            for (int month =0; month < 6; month++) 
+            for (int month = 0; month < 6; month++)
             {
                 // times all 6 months by o.95
                 currentCost *= 0.95;
@@ -279,9 +280,9 @@ namespace School_Device_Calculator
                         //if the user enters the valid number then break the loop which is the while(true) loop
 
                         return intInput;
-                        
+
                     }
-       
+
                 }
                 else
                 {
@@ -313,7 +314,7 @@ namespace School_Device_Calculator
                 // tryparse and prase are diffrent
                 // i lernt that try pares is for converting a string from console.readling to a int but it only works on valid input and will crash if the input is not valid
                 //tryparse works the same like parse but if the user inputs a string it will retern a false insted of a true
-                
+
                 //cheacs if the input is valid int not a string
                 if (int.TryParse(input, out intInput))
                 {
@@ -324,10 +325,10 @@ namespace School_Device_Calculator
                         //if the user enters the valid number then break the loop which is the while(true) loop
 
                         return intInput;
-                        
+
                     }
-    
-                    
+
+
                 }
                 else
                 {
@@ -347,18 +348,44 @@ namespace School_Device_Calculator
         }
 
         //Check if a name is lowercase and convert to title case if nacesary
+
+
         static string CheckName(string ask)
         {
+            string name;
 
-            
-            Console.WriteLine(ask);
+            while (true)
+            {
+                Console.WriteLine(ask);
+                name = Console.ReadLine();
 
-            string name = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error: Please Enter A Valid Device Name");
+                    Console.ResetColor();
 
-            name = name[0].ToString().ToUpper() + name.Substring(1);
+                    continue;
+                }
+
+              
+                if (!Regex.IsMatch(name, @"^[a-zA-Z0-9\s]+$"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error: Please Enter A Device Name");
+                    Console.ResetColor();
+                    continue;
+
+                }
+
+                break;
+            }
+
+            // formatting AFTER validation
+            name = Regex.Replace(name, @"\s+", " ").Trim();
+            name = char.ToUpper(name[0]) + name.Substring(1);
 
             return name;
-
         }
 
         static string CheckCategory(string ask)
@@ -377,21 +404,21 @@ namespace School_Device_Calculator
                 {
                     category = "Laptop";
                     Laptops++;
-                    
+
                     return category;
                 }
                 else if (input == "2")
                 {
                     category = "Desktop";
                     Desktop++;
-                    
+
                     return category;
                 }
                 else if (input == "3")
                 {
                     category = "Other";
                     Other++;
-                    
+
                     return category;
                 }
                 else

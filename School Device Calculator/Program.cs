@@ -33,7 +33,7 @@ namespace School_Device_Calculator
 
         static readonly int[] MAXMINCOST = { 0, 1000000 };
         static readonly int[] MAXMINAMOUNT = { 0, 10000 };
-
+        
 
 
 
@@ -125,9 +125,7 @@ namespace School_Device_Calculator
 
 
 
-            int amount = CheckInt(MAXMINAMOUNT[0], MAXMINAMOUNT[1], QUESTIONS[3]);
-
-
+            int amount = CheckAmount(MAXMINAMOUNT[0], MAXMINAMOUNT[1], QUESTIONS[3]);
 
             
             string category = CheckCategory(QUESTIONS[1]);
@@ -256,9 +254,9 @@ namespace School_Device_Calculator
         }
 
         //checks the int's
-        static int CheckInt(int min, int max, string ask)
+        static int CheckAmount(int min, int max, string ask)
         {
-            //makes sure that the user enters the corect number 1,2 or 3
+            //makes sure that the user enters the corect number 0, 10000
             while (true)
             {
 
@@ -278,7 +276,7 @@ namespace School_Device_Calculator
                     if (intInput >= min && intInput <= max)
                     {
                         //if the user enters the valid number then break the loop which is the while(true) loop
-
+                        
                         return intInput;
 
                     }
@@ -391,6 +389,7 @@ namespace School_Device_Calculator
         static string CheckCategory(string ask)
         {
 
+            Console.WriteLine(ask);
             string category;
 
             //makes sure that the user enters the corract input
